@@ -14,6 +14,7 @@
 namespace MCL
 {
 
+using pfn_notify_t = void (CL_CALLBACK*)(const char*, const void*, size_t, void*);
 class Context
 {
 public:
@@ -24,9 +25,15 @@ public:
     /************************************************************
     * @brief create context on a device
     * @param[in] dev the device
+    * @param[in] props context properties
+    * @param[in] pfn_notify callback
+    * @param[in] userdata userdata for pfn_notify
     * @return the context
     ************************************************************/
-    static Context Create(const Device& dev) noexcept;
+    static Context Create(const Device& dev, 
+                            const cl_context_properties* props = nullptr, 
+                            pfn_notify_t pfn_notify = nullptr,
+                            void* userdata = nullptr) noexcept;
 
 private:
     cl_context m_context;

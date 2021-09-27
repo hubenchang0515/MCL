@@ -27,13 +27,19 @@ Context::Context(Context&& src) noexcept :
 /************************************************************
 * @brief create context on a device
 * @param[in] dev the device
+* @param[in] props context properties
+* @param[in] pfn_notify callback
+* @param[in] userdata userdata for pfn_notify
 * @return the context
 ************************************************************/
-Context Context::Create(const Device& dev) noexcept
+Context Context::Create(const Device& dev, 
+                        const cl_context_properties* props = nullptr, 
+                        pfn_notify_t pfn_notify = nullptr,
+                        void* userdata = nullptr) noexcept
 {
     cl_int err;
     cl_device_id did = dev.id();
-    cl_context ctx = clCreateContext(nullptr, 1, &did, nullptr, nullptr, &err);
+    cl_context ctx = clCreateContext(props, 1, &did, pfn_notify, userdata, &err);
     return Context(ctx);
 }
 
