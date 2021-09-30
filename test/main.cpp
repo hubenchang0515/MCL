@@ -87,4 +87,8 @@ int main()
         printf("%f  ", x[i]);
     }
     printf("\n");
+
+    free(x);
+    free(y);
+    return EXIT_SUCCESS;
 }
