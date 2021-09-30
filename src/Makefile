@@ -1,6 +1,6 @@
 TARGET := libMCL.so
 LIBS := -lOpenCL
-CXXFLAGS := -W -Wall -Wextra -Werror -fPIC
+CXXFLAGS := -W -Wall -Wextra -Werror -fPIC -std=c++14
 
 PREFIX := /usr/local
 

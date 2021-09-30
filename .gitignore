@@ -31,4 +31,11 @@
 *.out
 *.app
 
+# env
 .vscode
+.vs
+3rd
+build/cmake/CMakeCache.txt
+build/cmake/Makefile
+build/cmake/cmake_install.cmake
+build/cmake/CMakeFiles
