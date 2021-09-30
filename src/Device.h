@@ -22,6 +22,8 @@ public:
     Device(const Device&) = default;
     Device(Device&&) = default;
 
+    static const Device invalid;
+
     /************************************************************
     * @brief get all devices on the platform with type 
     * @param[in] plat the platform
@@ -32,6 +34,14 @@ public:
 
     cl_device_id id() const noexcept;
     std::string info(cl_device_info iname) const noexcept;
+
+    /* Partiallyordered set */
+    bool operator < (const Device& another) const noexcept;
+    bool operator > (const Device& another) const noexcept;
+    bool operator == (const Device& another) const noexcept;
+    bool operator != (const Device& another) const noexcept;
+    bool operator <= (const Device& another) const noexcept;
+    bool operator >= (const Device& another) const noexcept;
 
 private:
     cl_device_id m_id;

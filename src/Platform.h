@@ -19,6 +19,8 @@ public:
     Platform(const Platform& plat) = default;
     Platform(Platform&& plat) = default;
 
+    static const Platform invalid; 
+
     /************************************************************
     * @brief get all platforms 
     * @return the platforms
@@ -32,6 +34,15 @@ public:
     std::string name() const noexcept;
     std::string vendor() const noexcept;
     std::string extensions() const noexcept;
+
+    /* Partiallyordered set */
+    bool operator < (const Platform& another) const noexcept;
+    bool operator > (const Platform& another) const noexcept;
+    bool operator == (const Platform& another) const noexcept;
+    bool operator != (const Platform& another) const noexcept;
+    bool operator <= (const Platform& another) const noexcept;
+    bool operator >= (const Platform& another) const noexcept;
+
 
 private:
     cl_platform_id m_id;

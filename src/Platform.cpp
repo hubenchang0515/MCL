@@ -3,6 +3,8 @@
 namespace MCL
 {
 
+const Platform Platform::invalid{nullptr};
+
 /************************************************************
 * @brief get platforms no more then n
 * @param[in] n the max 
@@ -83,5 +85,34 @@ std::string Platform::extensions() const noexcept
     return this->info(CL_PLATFORM_EXTENSIONS);
 }
 
+bool Platform::operator < (const Platform& another) const noexcept
+{
+    return m_id < another.m_id;
+}
+
+bool Platform::operator > (const Platform& another) const noexcept
+{
+    return m_id > another.m_id;
+}
+
+bool Platform::operator == (const Platform& another) const noexcept
+{
+    return m_id == another.m_id;
+}
+
+bool Platform::operator != (const Platform& another) const noexcept
+{
+    return m_id != another.m_id;
+}
+
+bool Platform::operator <= (const Platform& another) const noexcept
+{
+    return m_id <= another.m_id;
+}
+
+bool Platform::operator >= (const Platform& another) const noexcept
+{
+    return m_id >= another.m_id;
+}
 
 }; // namespace MCL

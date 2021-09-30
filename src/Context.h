@@ -22,6 +22,8 @@ public:
     Context(const Context&) = delete;
     Context(Context&& src) noexcept;
 
+    static const Context invalid;
+
     /************************************************************
     * @brief create context on a device
     * @param[in] dev the device
@@ -30,14 +32,25 @@ public:
     * @param[in] userdata userdata for pfn_notify
     * @return the context
     ************************************************************/
-    static Context Create(const Device& dev, 
+    static Context create(const Device& dev, 
                             const cl_context_properties* props = nullptr, 
                             pfn_notify_t pfn_notify = nullptr,
                             void* userdata = nullptr) noexcept;
+    
+    cl_context id() const noexcept;
+    std::string info(cl_context_info iname) const noexcept;
+
+    /* Partiallyordered set */
+    bool operator < (const Context& another) const noexcept;
+    bool operator > (const Context& another) const noexcept;
+    bool operator == (const Context& another) const noexcept;
+    bool operator != (const Context& another) const noexcept;
+    bool operator <= (const Context& another) const noexcept;
+    bool operator >= (const Context& another) const noexcept;
 
 private:
-    cl_context m_context;
-    Context(cl_context ctx) noexcept;
+    cl_context m_id;
+    Context(cl_context id) noexcept;
 };
 
 }; // namespace MCL

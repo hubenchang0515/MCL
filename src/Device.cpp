@@ -4,6 +4,8 @@
 namespace MCL
 {
 
+const Device Device::invalid{nullptr};
+
 std::vector<Device> Device::get(const Platform& plat, cl_device_type dtype) noexcept
 {
     std::vector<Device> devices;
@@ -51,6 +53,36 @@ std::string Device::info(cl_device_info iname) const noexcept
     delete[] name;
 
     return ret;
+}
+
+bool Device::operator < (const Device& another) const noexcept
+{
+    return m_id < another.m_id;
+}
+
+bool Device::operator > (const Device& another) const noexcept
+{
+    return m_id > another.m_id;
+}
+
+bool Device::operator == (const Device& another) const noexcept
+{
+    return m_id == another.m_id;
+}
+
+bool Device::operator != (const Device& another) const noexcept
+{
+    return m_id != another.m_id;
+}
+
+bool Device::operator <= (const Device& another) const noexcept
+{
+    return m_id <= another.m_id;
+}
+
+bool Device::operator >= (const Device& another) const noexcept
+{
+    return m_id >= another.m_id;
 }
 
 }; // namespace MCL

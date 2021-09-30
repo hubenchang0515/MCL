@@ -54,7 +54,7 @@ int main()
     }
 
     /* 创建指令队列 */
-    cl_command_queue cmd = clCreateCommandQueueWithProperties(ctx, did, 0, &err);
+    cl_command_queue cmd = clCreateCommandQueueWithProperties(ctx, did, nullptr, &err);
     if (err != CL_SUCCESS)
     {
         fprintf(stderr, "failed to create command queue\n");
@@ -108,7 +108,7 @@ int main()
 
     /* 读取OpenCL源码 */
     size_t srcSize = 0;
-    char* src = readKernel("add.cl", &srcSize);
+    char* src = readKernel("kernel.cl", &srcSize);
     if (src == nullptr)
     {
         fprintf(stderr, "failed to read source\n");
