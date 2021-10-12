@@ -49,7 +49,12 @@ int main()
     }
     program.print();
 
-    auto vecAdd = MCL::Kernel::create(program, "vecAdd");
+    auto vecAdd = MCL::Kernel::create(program, "add");
+    if (vecAdd.id() == nullptr)
+    {
+        fprintf(stderr, "failed to create kernel\n");
+        return EXIT_FAILURE;
+    }
     
     /* 创建数据 */
     cl_float* x = static_cast<float*>(malloc(VECTOR_SIZE * sizeof(cl_float)));

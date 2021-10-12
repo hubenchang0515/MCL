@@ -1,7 +1,7 @@
-__kernel void vecAdd(__global float* X, __global float* Y)
+__kernel void add(__global float* X, __global float* Y, __global float* Z)
 {
 	/* 获取当前线程的全局id */
 	const int idx = get_global_id(0);
 
-	X[idx] = X[idx] + Y[idx];
+	Z[idx] = X[idx] + Y[idx];
 }
