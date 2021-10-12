@@ -40,8 +40,17 @@ int main()
     (*pt2)[0][1] = 3;
     (*pt2)[1][0] = 2;
     (*pt2)[1][1] = 1;
-    t1.printData();
+    t2.printData();
     
     auto t3 = t1.add(t2);
+    t3.printData();
+
+    t3 = t1.sub(t2);
+    t3.printData();
+
+    t3 = t1.mul(t2);
+    t3.printData();
+
+    t3 = t1.div(t2);
     t3.printData();
 }

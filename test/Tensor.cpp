@@ -5,6 +5,9 @@ MCL::Context Tensor::clCtx = MCL::Context::invalid;
 MCL::CommandQueue Tensor::clCmd = MCL::CommandQueue::invalid;
 MCL::Program Tensor::clProgram = MCL::Program::invalid;
 MCL::Kernel Tensor::clAdd = MCL::Kernel::invalid;
+MCL::Kernel Tensor::clSub = MCL::Kernel::invalid;
+MCL::Kernel Tensor::clMul = MCL::Kernel::invalid;
+MCL::Kernel Tensor::clDiv = MCL::Kernel::invalid;
 
 static void printTab(size_t tab) noexcept
 {
@@ -45,7 +48,28 @@ bool Tensor::init(MCL::Device& dev) noexcept
     Tensor::clAdd = MCL::Kernel::create(clProgram, "add");
     if (clAdd.id() == nullptr)
     {
-        fprintf(stderr, "failed to create kernel\n");
+        fprintf(stderr, "failed to create kernel add\n");
+        return false;
+    }
+
+    Tensor::clSub = MCL::Kernel::create(clProgram, "sub");
+    if (clSub.id() == nullptr)
+    {
+        fprintf(stderr, "failed to create kernel sub\n");
+        return false;
+    }
+
+    Tensor::clMul = MCL::Kernel::create(clProgram, "mul");
+    if (clMul.id() == nullptr)
+    {
+        fprintf(stderr, "failed to create kernel mul\n");
+        return false;
+    }
+
+    Tensor::clDiv = MCL::Kernel::create(clProgram, "div");
+    if (clDiv.id() == nullptr)
+    {
+        fprintf(stderr, "failed to create kernel div\n");
         return false;
     }
 
@@ -154,6 +178,29 @@ Tensor::Tensor(Tensor&& src) noexcept :
     src.m_size = 0;
 }
 
+Tensor& Tensor::operator = (const Tensor& src) noexcept
+{
+    Tensor(src.m_shape, src.m_dim);
+    memcpy(m_data, src.m_data, m_size);
+
+    return *this;
+}
+
+Tensor& Tensor::operator = (Tensor&& src) noexcept
+{
+    m_shape = src.m_shape;
+    m_dim = src.m_dim;
+    m_data = src.m_data;
+    m_size = src.m_size;
+
+    src.m_shape = nullptr;
+    src.m_dim = 0;
+    src.m_data = nullptr;
+    src.m_size = 0;
+
+    return *this;
+}
+
 size_t* Tensor::shape(size_t* dim) const noexcept
 {
     if (dim != nullptr)
@@ -191,7 +238,7 @@ void Tensor::printData() const noexcept
     Tensor::print(m_data, m_shape, m_dim);
 }
 
-Tensor Tensor::add(const Tensor& n) const noexcept
+Tensor Tensor::scalar(const Tensor& n, const MCL::Kernel& kernel) const noexcept
 {
     Tensor result{m_shape, m_dim};
 
@@ -202,12 +249,32 @@ Tensor Tensor::add(const Tensor& n) const noexcept
     in1.write(clCmd, m_data, m_size * sizeof(cl_float));
     in2.write(clCmd, n.m_data, m_size * sizeof(cl_float));
 
-    clAdd.setArg(0, in1);
-    clAdd.setArg(1, in2);
-    clAdd.setArg(2, out);
-    clAdd.invoke(clCmd, m_size, 64);
+    kernel.setArg(0, in1);
+    kernel.setArg(1, in2);
+    kernel.setArg(2, out);
+    kernel.invoke(clCmd, m_size, 64);
 
     out.read(clCmd, result.m_data, m_size * sizeof(cl_float));
 
     return result;
+}
+
+Tensor Tensor::add(const Tensor& n) const noexcept
+{
+    return this->scalar(n, clAdd);
+}
+
+Tensor Tensor::sub(const Tensor& n) const noexcept
+{
+    return this->scalar(n, clSub);
+}
+
+Tensor Tensor::mul(const Tensor& n) const noexcept
+{
+    return this->scalar(n, clMul);
+}
+
+Tensor Tensor::div(const Tensor& n) const noexcept
+{
+    return this->scalar(n, clDiv);
 }
