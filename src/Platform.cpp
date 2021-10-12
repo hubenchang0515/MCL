@@ -3,7 +3,7 @@
 namespace MCL
 {
 
-const Platform Platform::invalid{nullptr};
+const Platform Platform::invalid = nullptr;
 
 /************************************************************
 * @brief get platforms no more then n

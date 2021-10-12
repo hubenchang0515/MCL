@@ -3,6 +3,8 @@
 namespace MCL
 {
 
+const CommandQueue CommandQueue::invalid = nullptr;
+
 CommandQueue CommandQueue::create(const Device& dev, 
                                     const Context& ctx, 
                                     const cl_queue_properties *properties) noexcept

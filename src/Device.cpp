@@ -4,7 +4,7 @@
 namespace MCL
 {
 
-const Device Device::invalid{nullptr};
+const Device Device::invalid = nullptr;
 
 std::vector<Device> Device::get(const Platform& plat, cl_device_type dtype) noexcept
 {

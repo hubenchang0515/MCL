@@ -3,6 +3,8 @@
 namespace MCL
 {
 
+const Program Program::invalid{nullptr, 0, nullptr};
+
 Program Program::load(const Context& ctx, const char* file) noexcept
 {
     FILE* fp = fopen(file, "rb");

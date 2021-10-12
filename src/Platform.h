@@ -19,7 +19,10 @@ public:
     Platform(const Platform& plat) = default;
     Platform(Platform&& plat) = default;
 
-    static const Platform invalid; 
+    Platform& operator = (const Platform&) = default;
+    Platform& operator = (Platform&& src) = default;
+
+    static const Platform invalid;
 
     /************************************************************
     * @brief get all platforms 

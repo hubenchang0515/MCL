@@ -22,6 +22,9 @@ public:
     Device(const Device&) = default;
     Device(Device&&) = default;
 
+    Device& operator = (const Device&) = default;
+    Device& operator = (Device&& src) = default;
+
     static const Device invalid;
 
     /************************************************************

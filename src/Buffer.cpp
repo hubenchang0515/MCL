@@ -3,6 +3,8 @@
 namespace MCL
 {
 
+const Buffer Buffer::invalid{nullptr, 0};
+
 /************************************************************
 * @brief create a buffer on context
 * @param[in] ctx the context

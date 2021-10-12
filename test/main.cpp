@@ -20,7 +20,7 @@ MCL::Device getGpu()
 int main()
 {
     auto gpu = getGpu();
-    if (gpu == MCL::Device::invalid)
+    if (gpu.id() == nullptr)
     {
         fprintf(stderr, "failed to find GPU\n");
         return EXIT_FAILURE;

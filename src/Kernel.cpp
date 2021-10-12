@@ -3,6 +3,8 @@
 namespace MCL
 {
 
+const Kernel Kernel::invalid = nullptr;
+
 Kernel Kernel::create(const Program& program, const char* name) noexcept
 {
     cl_int err;

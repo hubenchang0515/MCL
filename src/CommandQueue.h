@@ -26,6 +26,8 @@ public:
     CommandQueue& operator = (const CommandQueue&) = default;
     CommandQueue& operator = (CommandQueue&& src) = default;
 
+    static const CommandQueue invalid;
+
     /************************************************************
     * @brief create a command queue on the device and context
     * @param[in] dev the device

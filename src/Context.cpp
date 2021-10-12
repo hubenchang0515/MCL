@@ -3,6 +3,8 @@
 namespace MCL
 {
 
+const Context Context::invalid = nullptr;
+
 Context::Context(cl_context id) noexcept :
     m_id(new cl_context, [](cl_context* id){clReleaseContext(*id); delete id;})
 {

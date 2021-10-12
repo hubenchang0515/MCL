@@ -30,6 +30,8 @@ public:
     Kernel& operator = (const Kernel&) = default;
     Kernel& operator = (Kernel&& src) = default;
 
+    static const Kernel invalid;
+
     static Kernel create(const Program& program, const char* name) noexcept;
 
     cl_kernel id() const noexcept;

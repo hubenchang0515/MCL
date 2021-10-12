@@ -26,6 +26,8 @@ public:
     Context& operator = (const Context&) = default;
     Context& operator = (Context&& src) = default;
 
+    static const Context invalid;
+
     /************************************************************
     * @brief create context on a device
     * @param[in] dev the device
