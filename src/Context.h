@@ -10,6 +10,7 @@
 #include <CL/cl.hpp>
 #include <cstddef>
 #include "Device.h"
+#include <memory>
 
 namespace MCL
 {
@@ -18,11 +19,9 @@ using pfn_notify_t = void (CL_CALLBACK*)(const char*, const void*, size_t, void*
 class Context
 {
 public:
-    ~Context() noexcept;
-    Context(const Context&) = delete;
+    ~Context() = default;
+    Context(const Context&) = default;
     Context(Context&& src) noexcept;
-
-    static const Context invalid;
 
     /************************************************************
     * @brief create context on a device
@@ -40,16 +39,9 @@ public:
     cl_context id() const noexcept;
     std::string info(cl_context_info iname) const noexcept;
 
-    /* Partiallyordered set */
-    bool operator < (const Context& another) const noexcept;
-    bool operator > (const Context& another) const noexcept;
-    bool operator == (const Context& another) const noexcept;
-    bool operator != (const Context& another) const noexcept;
-    bool operator <= (const Context& another) const noexcept;
-    bool operator >= (const Context& another) const noexcept;
 
 private:
-    cl_context m_id;
+    std::shared_ptr<cl_context> m_id;
     Context(cl_context id) noexcept;
 };
 

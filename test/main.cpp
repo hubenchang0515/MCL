@@ -1,10 +1,4 @@
-#include "MCL/Platform.h"
-#include "MCL/Device.h"
-#include "MCL/Context.h"
-#include "MCL/CommandQueue.h"
-#include "MCL/Program.h"
-#include "MCL/Kernel.h"
-#include "MCL/Buffer.h"
+#include "MCL/MCL.h"
 
 #define VECTOR_SIZE    1024
 
@@ -34,14 +28,14 @@ int main()
     printf("Get GPU: %s\n", gpu.info(CL_DEVICE_NAME).c_str());
     
     auto ctx = MCL::Context::create(gpu);
-    if (ctx == MCL::Context::invalid)
+    if (ctx.id() == nullptr)
     {
         fprintf(stderr, "failed to create context\n");
         return EXIT_FAILURE;
     }
     
     auto cmd = MCL::CommandQueue::create(gpu, ctx);
-    if (cmd == MCL::CommandQueue::invalid)
+    if (cmd.id() == nullptr)
     {
         fprintf(stderr, "failed to create command queue\n");
         return EXIT_FAILURE;

@@ -15,15 +15,6 @@ Kernel Kernel::create(const Program& program, const char* name) noexcept
     return Kernel(id);
 }
 
-Kernel::~Kernel() noexcept
-{
-    if (m_id == nullptr)
-        return;
-
-    clReleaseKernel(m_id);
-    m_id = nullptr;
-}
-
 Kernel::Kernel(Kernel&& src) noexcept :
     m_id(src.m_id)
 {
@@ -31,25 +22,25 @@ Kernel::Kernel(Kernel&& src) noexcept :
 }
 
 Kernel::Kernel(cl_kernel id) :
-    m_id(id)
+    m_id(new cl_kernel, [](cl_kernel* id){clReleaseKernel(*id); delete id;})
 {
-
+    *m_id = id;
 }
 
 cl_kernel Kernel::id() const noexcept
 {
-    return m_id;
+    return *m_id;
 }
 
 cl_int Kernel::setArg(cl_uint index, const Buffer& data) const noexcept
 {
     cl_mem mem = data.mem();
-    return clSetKernelArg(m_id, index, sizeof(cl_mem), static_cast<void*>(&mem));
+    return clSetKernelArg(*m_id, index, sizeof(cl_mem), static_cast<void*>(&mem));
 }
 
 cl_int Kernel::invoke(const CommandQueue& cmd, size_t globalItems, size_t localItems) const noexcept
 {
-    return clEnqueueNDRangeKernel(cmd.id(), m_id, 1, nullptr, &globalItems, &localItems, 0, nullptr, nullptr);
+    return clEnqueueNDRangeKernel(cmd.id(), *m_id, 1, nullptr, &globalItems, &localItems, 0, nullptr, nullptr);
 }
 
 }; // namespace MCL

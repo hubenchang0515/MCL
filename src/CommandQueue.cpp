@@ -3,8 +3,6 @@
 namespace MCL
 {
 
-const CommandQueue CommandQueue::invalid{nullptr};
-
 CommandQueue CommandQueue::create(const Device& dev, 
                                     const Context& ctx, 
                                     const cl_queue_properties *properties) noexcept
@@ -14,19 +12,10 @@ CommandQueue CommandQueue::create(const Device& dev,
     return CommandQueue(cmd);
 }
 
-CommandQueue::~CommandQueue() noexcept
-{
-    if (m_id == nullptr)
-        return;
-
-    clReleaseCommandQueue(m_id);
-    m_id = nullptr;
-}
-
 CommandQueue::CommandQueue(cl_command_queue id) noexcept :
-    m_id(id)
+    m_id(new cl_command_queue, [](cl_command_queue* id){clReleaseCommandQueue(*id); delete id;})
 {
-
+    *m_id = id;
 }
 
 CommandQueue::CommandQueue(CommandQueue&& src) noexcept :
@@ -37,37 +26,7 @@ CommandQueue::CommandQueue(CommandQueue&& src) noexcept :
 
 cl_command_queue CommandQueue::id() const noexcept
 {
-    return m_id;
-}
-
-bool CommandQueue::operator < (const CommandQueue& another) const noexcept
-{
-    return m_id < another.m_id;
-}
-
-bool CommandQueue::operator > (const CommandQueue& another) const noexcept
-{
-    return m_id > another.m_id;
-}
-
-bool CommandQueue::operator == (const CommandQueue& another) const noexcept
-{
-    return m_id == another.m_id;
-}
-
-bool CommandQueue::operator != (const CommandQueue& another) const noexcept
-{
-    return m_id != another.m_id;
-}
-
-bool CommandQueue::operator <= (const CommandQueue& another) const noexcept
-{
-    return m_id <= another.m_id;
-}
-
-bool CommandQueue::operator >= (const CommandQueue& another) const noexcept
-{
-    return m_id >= another.m_id;
+    return *m_id;
 }
 
 }; // namespace MCL

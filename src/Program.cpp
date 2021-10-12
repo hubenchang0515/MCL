@@ -61,26 +61,13 @@ Program Program::load(const Context& ctx, const char* code, size_t size, Deleter
     return Program{const_cast<const char*>(code), size, id, deleter};
 }
 
-Program::~Program() noexcept
-{
-    if (m_code != nullptr && m_deleter != nullptr)
-        m_deleter();
-
-    if (m_id != nullptr)
-        clReleaseProgram(m_id);
-
-    m_id = nullptr;
-    m_code = nullptr;
-    m_size = 0;
-}
-
 Program::Program(const char* code, size_t size, cl_program id, Deleter deleter) noexcept :
     m_code(code),
     m_size(size),
-    m_id(id),
+    m_id(new cl_program, [](cl_program* id){clReleaseProgram(*id); delete id;}),
     m_deleter(deleter)
 {
-
+    *m_id = id;
 }
 
 Program::Program(Program&& src) noexcept :
@@ -97,7 +84,7 @@ Program::Program(Program&& src) noexcept :
 
 cl_program Program::id() const noexcept
 {
-    return m_id;
+    return *m_id;
 }
 
 size_t Program::size() const noexcept
@@ -113,7 +100,7 @@ void Program::print() const noexcept
 bool Program::build(const Device& dev) const noexcept
 {
     cl_device_id devId = dev.id();
-    cl_int err = clBuildProgram(m_id, 1, &devId, nullptr, nullptr, nullptr);
+    cl_int err = clBuildProgram(*m_id, 1, &devId, nullptr, nullptr, nullptr);
     return err == CL_SUCCESS;
 }
 
@@ -121,11 +108,11 @@ std::string Program::info(const Device& dev) const noexcept
 {
     cl_device_id devId = dev.id();
     size_t len = 0;
-    clGetProgramBuildInfo(m_id, devId, CL_PROGRAM_BUILD_LOG, 0, nullptr, &len);
-    char* msg = static_cast<char*>(malloc(len));
-    clGetProgramBuildInfo(m_id, devId, CL_PROGRAM_BUILD_LOG, len, msg, 0);
+    clGetProgramBuildInfo(*m_id, devId, CL_PROGRAM_BUILD_LOG, 0, nullptr, &len);
+    char* msg = new char[len];
+    clGetProgramBuildInfo(*m_id, devId, CL_PROGRAM_BUILD_LOG, len, msg, 0);
     std::string ret{msg, len};
-    free(static_cast<void*>(msg));
+    delete[] msg;
     return ret;
 }
 

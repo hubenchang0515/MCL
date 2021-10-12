@@ -15,6 +15,7 @@
 #include "CommandQueue.h"
 #include "Program.h"
 #include "Buffer.h"
+#include <memory>
 
 namespace MCL
 {
@@ -22,8 +23,8 @@ namespace MCL
 class Kernel
 {
 public:
-    ~Kernel() noexcept;
-    Kernel(const Kernel&) = delete;
+    ~Kernel() = default;
+    Kernel(const Kernel&) = default;
     Kernel(Kernel&& src) noexcept;
 
     static Kernel create(const Program& program, const char* name) noexcept;
@@ -35,7 +36,7 @@ public:
 private:
     Kernel(cl_kernel id);
 
-    cl_kernel m_id;
+    std::shared_ptr<cl_kernel> m_id;
 
 };
 

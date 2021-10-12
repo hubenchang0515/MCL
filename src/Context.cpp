@@ -3,21 +3,10 @@
 namespace MCL
 {
 
-const Context Context::invalid{nullptr};
-
-Context::~Context() noexcept
-{
-    if(m_id == nullptr)
-        return;
-
-    clReleaseContext(m_id);
-    m_id = nullptr;
-}
-
 Context::Context(cl_context id) noexcept :
-    m_id(id)
+    m_id(new cl_context, [](cl_context* id){clReleaseContext(*id); delete id;})
 {
-
+    *m_id = id;
 }
 
 Context::Context(Context&& src) noexcept :
@@ -47,54 +36,24 @@ Context Context::create(const Device& dev,
 
 cl_context Context::id() const noexcept
 {
-    return m_id;
+    return *m_id;
 }
 
 std::string Context::info(cl_context_info iname) const noexcept
 {
     size_t n = 0;
-    cl_int err = clGetContextInfo(m_id, iname, 0, nullptr, &n); // n will include the '\0'
+    cl_int err = clGetContextInfo(*m_id, iname, 0, nullptr, &n); // n will include the '\0'
     if (err != CL_SUCCESS || n == 0)
     {
         return "";
     }
 
     char* name = new char[n];
-    clGetContextInfo(m_id, iname, n, name, nullptr);
+    clGetContextInfo(*m_id, iname, n, name, nullptr);
     std::string ret = name;
     delete[] name;
 
     return ret;
-}
-
-bool Context::operator < (const Context& another) const noexcept
-{
-    return m_id < another.m_id;
-}
-
-bool Context::operator > (const Context& another) const noexcept
-{
-    return m_id > another.m_id;
-}
-
-bool Context::operator == (const Context& another) const noexcept
-{
-    return m_id == another.m_id;
-}
-
-bool Context::operator != (const Context& another) const noexcept
-{
-    return m_id != another.m_id;
-}
-
-bool Context::operator <= (const Context& another) const noexcept
-{
-    return m_id <= another.m_id;
-}
-
-bool Context::operator >= (const Context& another) const noexcept
-{
-    return m_id >= another.m_id;
 }
 
 }; // namespace MCL

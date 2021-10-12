@@ -11,6 +11,7 @@
 #include <cstddef>
 #include "Device.h"
 #include "Context.h"
+#include <memory>
 
 namespace MCL
 {
@@ -18,11 +19,9 @@ namespace MCL
 class CommandQueue
 {
 public:
-    ~CommandQueue() noexcept;
-    CommandQueue(const CommandQueue&) = delete;
+    ~CommandQueue() = default;
+    CommandQueue(const CommandQueue&) = default;
     CommandQueue(CommandQueue&& src) noexcept;
-
-    static const CommandQueue invalid;
 
     /************************************************************
     * @brief create a command queue on the device and context
@@ -37,18 +36,10 @@ public:
 
     cl_command_queue id() const noexcept;
 
-    /* Partiallyordered set */
-    bool operator < (const CommandQueue& another) const noexcept;
-    bool operator > (const CommandQueue& another) const noexcept;
-    bool operator == (const CommandQueue& another) const noexcept;
-    bool operator != (const CommandQueue& another) const noexcept;
-    bool operator <= (const CommandQueue& another) const noexcept;
-    bool operator >= (const CommandQueue& another) const noexcept;
-
 private:
     CommandQueue(cl_command_queue id) noexcept;
 
-    cl_command_queue m_id;
+    std::shared_ptr<cl_command_queue> m_id;
 };
 
 }; // namespace MCL

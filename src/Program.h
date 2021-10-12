@@ -22,8 +22,8 @@ class Program
 public:
     using Deleter = std::function<void()>;
 
-    ~Program() noexcept;
-    Program(const Program&) = delete;
+    ~Program() = default;
+    Program(const Program&) = default;
     Program(Program&& src) noexcept;
 
     static Program load(const Context& ctx, const char* file) noexcept;
@@ -40,7 +40,7 @@ private:
 
     const char* m_code;
     size_t m_size;
-    cl_program m_id;
+    std::shared_ptr<cl_program> m_id;
     Deleter m_deleter;
 };
 
