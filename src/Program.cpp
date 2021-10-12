@@ -70,18 +70,6 @@ Program::Program(const char* code, size_t size, cl_program id, Deleter deleter) 
     *m_id = id;
 }
 
-Program::Program(Program&& src) noexcept :
-    m_code(src.m_code),
-    m_size(src.m_size),
-    m_id(src.m_id),
-    m_deleter(src.m_deleter)
-{
-    src.m_code = nullptr;
-    src.m_size = 0;
-    src.m_id = nullptr;
-    src.m_deleter = nullptr;
-}
-
 cl_program Program::id() const noexcept
 {
     return *m_id;

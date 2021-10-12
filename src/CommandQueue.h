@@ -21,7 +21,10 @@ class CommandQueue
 public:
     ~CommandQueue() = default;
     CommandQueue(const CommandQueue&) = default;
-    CommandQueue(CommandQueue&& src) noexcept;
+    CommandQueue(CommandQueue&& src) = default;
+
+    CommandQueue& operator = (const CommandQueue&) = default;
+    CommandQueue& operator = (CommandQueue&& src) = default;
 
     /************************************************************
     * @brief create a command queue on the device and context

@@ -15,12 +15,6 @@ Kernel Kernel::create(const Program& program, const char* name) noexcept
     return Kernel(id);
 }
 
-Kernel::Kernel(Kernel&& src) noexcept :
-    m_id(src.m_id)
-{
-    src.m_id = nullptr;
-}
-
 Kernel::Kernel(cl_kernel id) :
     m_id(new cl_kernel, [](cl_kernel* id){clReleaseKernel(*id); delete id;})
 {

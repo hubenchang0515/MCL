@@ -25,7 +25,10 @@ class Kernel
 public:
     ~Kernel() = default;
     Kernel(const Kernel&) = default;
-    Kernel(Kernel&& src) noexcept;
+    Kernel(Kernel&& src) = default;
+
+    Kernel& operator = (const Kernel&) = default;
+    Kernel& operator = (Kernel&& src) = default;
 
     static Kernel create(const Program& program, const char* name) noexcept;
 

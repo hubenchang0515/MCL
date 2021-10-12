@@ -21,7 +21,10 @@ class Context
 public:
     ~Context() = default;
     Context(const Context&) = default;
-    Context(Context&& src) noexcept;
+    Context(Context&& src) = default;
+
+    Context& operator = (const Context&) = default;
+    Context& operator = (Context&& src) = default;
 
     /************************************************************
     * @brief create context on a device

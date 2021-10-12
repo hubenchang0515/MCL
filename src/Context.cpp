@@ -9,12 +9,6 @@ Context::Context(cl_context id) noexcept :
     *m_id = id;
 }
 
-Context::Context(Context&& src) noexcept :
-    m_id(src.m_id)
-{
-    src.m_id = nullptr;
-}
-
 /************************************************************
 * @brief create context on a device
 * @param[in] dev the device

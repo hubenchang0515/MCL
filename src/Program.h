@@ -24,7 +24,10 @@ public:
 
     ~Program() = default;
     Program(const Program&) = default;
-    Program(Program&& src) noexcept;
+    Program(Program&& src) = default;
+
+    Program& operator = (const Program&) = default;
+    Program& operator = (Program&& src) = default;
 
     static Program load(const Context& ctx, const char* file) noexcept;
     static Program load(const Context& ctx, const char* code, size_t size, Deleter deleter=nullptr) noexcept;

@@ -18,12 +18,6 @@ CommandQueue::CommandQueue(cl_command_queue id) noexcept :
     *m_id = id;
 }
 
-CommandQueue::CommandQueue(CommandQueue&& src) noexcept :
-    m_id(src.m_id)
-{
-    src.m_id = nullptr;
-}
-
 cl_command_queue CommandQueue::id() const noexcept
 {
     return *m_id;
