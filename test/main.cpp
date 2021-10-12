@@ -1,6 +1,4 @@
-#include "MCL/MCL.h"
-
-#define VECTOR_SIZE    1024
+#include "Tensor.h"
 
 MCL::Device getGpu()
 {
@@ -17,77 +15,33 @@ MCL::Device getGpu()
     return MCL::Device::invalid;
 }
 
+
 int main()
 {
     auto gpu = getGpu();
-    if (gpu.id() == nullptr)
+    if(!Tensor::init(gpu))
     {
-        fprintf(stderr, "failed to find GPU\n");
-        return EXIT_FAILURE;
+        fprintf(stderr, "init failed\n");
+        return 1;
     }
-    printf("Get GPU: %s\n", gpu.info(CL_DEVICE_NAME).c_str());
+
+    Tensor t1({2,2});
+    Tensor t2({2,2});
+
+    float (*pt1) [2][2] = reinterpret_cast<float (*)[2][2]>(t1.data());
+    (*pt1)[0][0] = 1;
+    (*pt1)[0][1] = 2;
+    (*pt1)[1][0] = 3;
+    (*pt1)[1][1] = 4;
+    t1.printData();
+
+    float (*pt2) [2][2] = reinterpret_cast<float (*)[2][2]>(t2.data());
+    (*pt2)[0][0] = 4;
+    (*pt2)[0][1] = 3;
+    (*pt2)[1][0] = 2;
+    (*pt2)[1][1] = 1;
+    t1.printData();
     
-    auto ctx = MCL::Context::create(gpu);
-    if (ctx.id() == nullptr)
-    {
-        fprintf(stderr, "failed to create context\n");
-        return EXIT_FAILURE;
-    }
-    
-    auto cmd = MCL::CommandQueue::create(gpu, ctx);
-    if (cmd.id() == nullptr)
-    {
-        fprintf(stderr, "failed to create command queue\n");
-        return EXIT_FAILURE;
-    }
-
-    auto program = MCL::Program::load(ctx, "kernel.cl");
-    if (!program.build(gpu))
-    {
-        fprintf(stderr, "failed to build program:\n%s\n", program.info(gpu).c_str());
-        return EXIT_FAILURE;
-    }
-    program.print();
-
-    auto vecAdd = MCL::Kernel::create(program, "add");
-    if (vecAdd.id() == nullptr)
-    {
-        fprintf(stderr, "failed to create kernel\n");
-        return EXIT_FAILURE;
-    }
-    
-    /* 创建数据 */
-    cl_float* x = static_cast<float*>(malloc(VECTOR_SIZE * sizeof(cl_float)));
-    cl_float* y = static_cast<float*>(malloc(VECTOR_SIZE * sizeof(cl_float)));
-    if (x == nullptr || y == nullptr)
-    {
-        fprintf(stderr, "RAM bad alloc\n");
-        return EXIT_FAILURE;
-    }
-
-    for (int i = 0; i < VECTOR_SIZE; i++)
-    {
-        x[i] = 1.0f * i;
-        y[i] = 2.0f * i;
-    }
-
-    auto X = MCL::Buffer::create(ctx, VECTOR_SIZE * sizeof(cl_float));
-    auto Y = MCL::Buffer::create(ctx, VECTOR_SIZE * sizeof(cl_float));
-    X.write(cmd, x,  VECTOR_SIZE * sizeof(cl_float));
-    Y.write(cmd, y,  VECTOR_SIZE * sizeof(cl_float));
-
-    vecAdd.setArg(0, X);
-    vecAdd.setArg(1, Y);
-    vecAdd.invoke(cmd, VECTOR_SIZE, 64);
-
-    X.read(cmd, x, VECTOR_SIZE * sizeof(cl_float));
-    for (int i = 0; i < VECTOR_SIZE; i++)
-    {
-        printf("%f  ", x[i]);
-    }
-    printf("\n");
-
-    free(x);
-    free(y);
-    return EXIT_SUCCESS;
+    auto t3 = t1.add(t2);
+    t3.printData();
 }

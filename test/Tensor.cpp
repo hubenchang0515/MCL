@@ -14,31 +14,6 @@ static void printTab(size_t tab) noexcept
 
 bool Tensor::init(MCL::Device& dev) noexcept
 {
-    // Tensor::clDev = dev;
-    // if (clDev.id() == nullptr)
-    //     return false;
-
-    // Tensor::clCtx = MCL::Context::create(dev);
-    // if (clCtx.id() == nullptr)
-    //     return false;
-
-    // Tensor::clCmd = MCL::CommandQueue::create(dev, clCtx);
-    // if (clCmd.id() == nullptr)
-    //     return false;
-
-    // Tensor::clProgram = MCL::Program::load(clCtx, "kernel.cl");
-    // if (clProgram.id() == nullptr)
-    //     return false;
-    // clProgram.print();
-
-    // Tensor::clAdd = MCL::Kernel::create(clProgram, "add");
-    // if (clAdd.id() == nullptr)
-    // {
-    //     return false;
-    // }
-    
-    // return true;
-
     Tensor::clDev = dev;
     if (clDev.id() == nullptr)
     {
