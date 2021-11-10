@@ -252,7 +252,7 @@ Tensor Tensor::scalar(const Tensor& n, const MCL::Kernel& kernel) const noexcept
     kernel.setArg(0, in1);
     kernel.setArg(1, in2);
     kernel.setArg(2, out);
-    kernel.invoke(clCmd, m_size, 64);
+    kernel.invoke(clCmd, m_size, m_size > 64 ? 64 : m_size);
 
     out.read(clCmd, result.m_data, m_size * sizeof(cl_float));
 

@@ -1,13 +1,13 @@
 #ifndef MCL_DEVICE_H
 #define MCL_DEVICE_H
 
-#ifndef CL_TARGET_OPENCL_VERSION 
-#define CL_TARGET_OPENCL_VERSION 220
-#endif // CL_TARGET_OPENCL_VERSION
+#ifndef CL_HPP_TARGET_OPENCL_VERSION 
+#define CL_HPP_TARGET_OPENCL_VERSION 210
+#endif // CL_HPP_TARGET_OPENCL_VERSION
 
 #include <vector>
 #include <string>
-#include <CL/cl.hpp>
+#include <CL/cl2.hpp>
 #include <cstddef>
 
 namespace MCL
